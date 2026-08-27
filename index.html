@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile Card</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
     * {
@@ -25,16 +25,16 @@
       overflow: hidden;
     }
 
-    /* MÀN HÌNH CHÀO MỪNG (WELCOME OVERLAY) */
+    /* POPUP TERMINAL WELCOME OVERLAY */
     #welcome-screen {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: #000;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
       z-index: 9999;
@@ -42,22 +42,67 @@
       transition: opacity 0.8s ease, visibility 0.8s ease;
     }
 
-    #welcome-screen h1 {
-      font-size: 24px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      animation: pulse 1.5s infinite;
+    /* Cửa sổ phong cách macOS Window */
+    .terminal-window {
+      width: 90%;
+      max-width: 380px;
+      background: #1e1e1e;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+      overflow: hidden;
     }
 
-    #welcome-screen p {
+    .terminal-header {
+      background: #2d2d2d;
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .red { background: #ff5f56; }
+    .yellow { background: #ffbd2e; }
+    .green { background: #27c93f; }
+
+    .terminal-body {
+      padding: 20px;
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      line-height: 1.2;
+      color: #e0e0e0;
+      text-align: center;
+      white-space: pre;
+    }
+
+    .ascii-art {
+      display: inline-block;
+      text-align: left;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .terminal-info {
+      margin-top: 15px;
+      font-family: 'Poppins', sans-serif;
       font-size: 13px;
-      color: #888;
-      margin-top: 8px;
+      line-height: 1.6;
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.98); }
+    .press-continue {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #aaa;
+      animation: blink 1.2s infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0.3; }
     }
 
     .fade-out {
@@ -68,195 +113,123 @@
     /* Video Nền */
     .bg-video {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -2;
-      filter: brightness(0.5);
+      top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: cover; z-index: -2; filter: brightness(0.5);
     }
 
     .overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(8px);
-      z-index: -1;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); z-index: -1;
     }
 
-    /* Card Profile Main */
+    /* Profile Card Main */
     .profile-card {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 20px;
-      padding: 30px 25px;
-      width: 90%;
-      max-width: 420px;
-      text-align: center;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+      border-radius: 20px; padding: 30px 25px;
+      width: 90%; max-width: 420px; text-align: center;
       backdrop-filter: blur(15px);
-      margin: 20px 0;
-    }
-
-    .avatar-wrapper {
-      width: 110px;
-      height: 110px;
-      margin: 0 auto 15px auto;
-    }
-
-    .avatar-wrapper img {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid #6c5ce7;
-      box-shadow: 0 0 15px rgba(108, 92, 231, 0.5);
-    }
-
-    .title {
-      font-size: 18px;
-      font-weight: 600;
-      display: flex;
-      justify-content: center;
-    }
-
-    .typewriter {
-      color: #a29bfe;
-      border-right: 2px solid #a29bfe;
-      white-space: nowrap;
-      animation: blink 0.7s infinite;
-    }
-
-    @keyframes blink { 50% { border-color: transparent; } }
-
-    .badges, .tech-stack {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin: 12px 0;
-    }
-
-    .bio {
-      font-size: 13px;
-      color: #ccc;
-      margin: 15px 0;
-    }
-
-    .social-links {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 20px;
-    }
-
-    .social-btn {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #fff;
-      text-decoration: none;
-      transition: 0.3s;
-    }
-
-    .social-btn:hover {
-      background: #6c5ce7;
-      transform: translateY(-3px);
     }
   </style>
 </head>
 <body>
 
-  <!-- MÀN HÌNH CHÀO MỪNG -->
   <div id="welcome-screen">
-    <h1>[ CLICK TO ENTER ]</h1>
-    <p>Nhấp vào bất kỳ đâu để tiếp tục</p>
+    <div class="terminal-window">
+      <div class="terminal-header">
+        <div class="dot red"></div>
+        <div class="dot yellow"></div>
+        <div class="dot green"></div>
+      </div>
+      <div class="terminal-body">
+        <div class="ascii-art" id="ascii-container"></div>
+        
+        <div class="terminal-info" id="info-container" style="display: none;">
+          <div>Mở trên web <i>để tránh bị lỗi!</i></div>
+          <div style="margin-top: 5px;">IP: <span id="ip-address">Đang tải...</span></div>
+          <div>System: <span id="user-system">Loading...</span></div>
+          <div>Bio Loaded</div>
+          <div class="press-continue">Press Enter/Click To Continue</div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- BG VIDEO -->
   <video id="my-video" class="bg-video" loop muted playsinline>
     <source src="https://assets.mixkit.co/videos/preview/mixkit-stars-in-the-night-sky-1610-large.mp4" type="video/mp4">
   </video>
   <div class="overlay"></div>
 
-  <!-- PROFILE CARD -->
   <div class="profile-card">
-    <div class="avatar-wrapper">
-      <img src="https://via.placeholder.com/150" alt="Avatar">
-    </div>
-
-    <div class="title">
-      <span class="typewriter" id="typewriter-text"></span>
-    </div>
-
-    <div class="badges">
-      <i class="fa-solid fa-code" style="color: #00cec9;"></i>
-      <i class="fa-solid fa-heart" style="color: #ff7675;"></i>
-      <i class="fa-solid fa-music" style="color: #a29bfe;"></i>
-      <i class="fa-solid fa-circle-check" style="color: #74b9ff;"></i>
-    </div>
-
-    <div class="tech-stack">
-      <i class="fa-brands fa-python" style="color: #ffeaa7;"></i>
-      <i class="fa-brands fa-html5" style="color: #e17055;"></i>
-      <i class="fa-brands fa-css3-alt" style="color: #0984e3;"></i>
-      <i class="fa-brands fa-js" style="color: #fdcb6e;"></i>
-    </div>
-
-    <div class="bio">
-      Le Thinh Media - Support Dv Mxh<br>Dev / Tricker Facebook TikTok
-    </div>
-
-    <div class="social-links">
-      <a href="#" class="social-btn"><i class="fa-solid fa-comment"></i></a>
-      <a href="#" class="social-btn"><i class="fa-brands fa-tiktok"></i></a>
-      <a href="#" class="social-btn"><i class="fa-brands fa-facebook-f"></i></a>
-    </div>
+    <h2>Le Thinh Media</h2>
+    <p>Support Dv Mxh</p>
   </div>
 
   <script>
-    // Xử lý sự kiện click Welcome
+    // Mã ASCII vẽ con mèo 
+    const asciiCat = [
+      "┌─┐┌─┐┬  ┬┬─┐┌─┐┬─┐┬─┐┬─┐",
+      "│  ├─┤│  │├┬┘├─┤├┬┘├┬┘├┬┘",
+      "└─┘┴ ┴┴─┘┴┴└─┴ ┴┴└─┴└─┴└─",
+      "   /\\_/\\  ",
+      "  ( o.o ) ",
+      "   > ^ <  ",
+      " ฅ^•ﻌ•^ฅ "
+    ];
+
+    const asciiContainer = document.getElementById("ascii-container");
+    const infoContainer = document.getElementById("info-container");
+    let lineIndex = 0;
+
+    // Chạy render từng dòng ASCII con mèo
+    function printAscii() {
+      if (lineIndex < asciiCat.length) {
+        asciiContainer.innerHTML += asciiCat[lineIndex] + "\n";
+        lineIndex++;
+        setTimeout(printAscii, 120); // Tốc độ xuất hiện từng dòng
+      } else {
+        // Render xong con mèo thì hiện thông tin bên dưới
+        infoContainer.style.display = "block";
+      }
+    }
+
+    // Tự động nhận diện thiết bị & Lấy địa chỉ IP thật
+    function getSystemInfo() {
+      // Nhận diện OS
+      const userAgent = navigator.userAgent;
+      let os = "Unknown OS";
+      if (userAgent.indexOf("iPhone") !== -1 || userAgent.indexOf("iPad") !== -1) os = "iOS";
+      else if (userAgent.indexOf("Android") !== -1) os = "Android";
+      else if (userAgent.indexOf("Windows") !== -1) os = "Windows PC";
+      else if (userAgent.indexOf("Mac") !== -1) os = "macOS";
+      document.getElementById("user-system").textContent = os;
+
+      // Lấy IP từ API
+      fetch('https://api.ipify.org?format=json')
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("ip-address").textContent = data.ip;
+        })
+        .catch(() => {
+          document.getElementById("ip-address").textContent = "127.0.0.1";
+        });
+    }
+
+    // Xử lý sự kiện Click để vào web
     const welcomeScreen = document.getElementById('welcome-screen');
     const bgVideo = document.getElementById('my-video');
 
     welcomeScreen.addEventListener('click', () => {
       welcomeScreen.classList.add('fade-out');
-      bgVideo.play(); // Bật video/âm thanh ngay khi người dùng tương tác
-      setTimeout(type, 800); // Chờ ẩn màn chào mừng mới chạy gõ chữ
+      bgVideo.play();
     });
 
-    // Code gõ chữ Typewriter
-    const textArray = ["Le Thinh Media", "Support Dv Mxh", "Developer"];
-    let index = 0, charIndex = 0;
-    const typewriterElement = document.getElementById("typewriter-text");
-
-    function type() {
-      if (charIndex < textArray[index].length) {
-        typewriterElement.textContent += textArray[index].charAt(charIndex);
-        charIndex++;
-        setTimeout(type, 100);
-      } else {
-        setTimeout(erase, 1500);
-      }
-    }
-
-    function erase() {
-      if (charIndex > 0) {
-        typewriterElement.textContent = textArray[index].substring(0, charIndex - 1);
-        charIndex--;
-        setTimeout(erase, 50);
-      } else {
-        index = (index + 1) % textArray.length;
-        setTimeout(type, 100);
-      }
-    }
+    // Chạy script khi tải trang
+    document.addEventListener("DOMContentLoaded", () => {
+      printAscii();
+      getSystemInfo();
+    });
   </script>
 </body>
 </html>
