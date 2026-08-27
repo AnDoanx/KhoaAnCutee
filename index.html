@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile Card</title>
-  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <style>
@@ -24,7 +22,47 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      overflow-x: hidden;
+      overflow: hidden;
+    }
+
+    /* MÀN HÌNH CHÀO MỪNG (WELCOME OVERLAY) */
+    #welcome-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      cursor: pointer;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+
+    #welcome-screen h1 {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      animation: pulse 1.5s infinite;
+    }
+
+    #welcome-screen p {
+      font-size: 13px;
+      color: #888;
+      margin-top: 8px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.98); }
+    }
+
+    .fade-out {
+      opacity: 0 !important;
+      visibility: hidden !important;
     }
 
     /* Video Nền */
@@ -39,7 +77,6 @@
       filter: brightness(0.5);
     }
 
-    /* Lớp phủ tối chống chói */
     .overlay {
       position: fixed;
       top: 0;
@@ -51,7 +88,7 @@
       z-index: -1;
     }
 
-    /* Container Profile Card */
+    /* Card Profile Main */
     .profile-card {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.15);
@@ -65,9 +102,7 @@
       margin: 20px 0;
     }
 
-    /* Avatar */
     .avatar-wrapper {
-      position: relative;
       width: 110px;
       height: 110px;
       margin: 0 auto 15px auto;
@@ -82,15 +117,11 @@
       box-shadow: 0 0 15px rgba(108, 92, 231, 0.5);
     }
 
-    /* Title & Typewriter Text */
     .title {
       font-size: 18px;
       font-weight: 600;
       display: flex;
       justify-content: center;
-      align-items: center;
-      gap: 5px;
-      color: #fff;
     }
 
     .typewriter {
@@ -100,89 +131,21 @@
       animation: blink 0.7s infinite;
     }
 
-    @keyframes blink {
-      50% { border-color: transparent; }
-    }
+    @keyframes blink { 50% { border-color: transparent; } }
 
-    /* Badges section */
-    .badges {
+    .badges, .tech-stack {
       display: flex;
       justify-content: center;
       gap: 10px;
       margin: 12px 0;
     }
 
-    .badges img {
-      width: 24px;
-      height: 24px;
-      filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
-    }
-
-    /* Tech Stack Logos */
-    .tech-stack {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin: 15px 0;
-      flex-wrap: wrap;
-    }
-
-    .tech-stack img {
-      width: 22px;
-      height: 22px;
-      transition: transform 0.2s;
-    }
-
-    .tech-stack img:hover {
-      transform: scale(1.2);
-    }
-
-    /* Bio description */
     .bio {
       font-size: 13px;
       color: #ccc;
-      line-height: 1.5;
       margin: 15px 0;
     }
 
-    /* Discord Mini Widget */
-    .discord-card {
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 12px;
-      text-align: left;
-      margin: 15px 0;
-      font-size: 12px;
-    }
-
-    .discord-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .discord-avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-    }
-
-    .discord-info b {
-      display: block;
-      color: #fff;
-      font-size: 14px;
-    }
-
-    .discord-quote {
-      margin-top: 8px;
-      color: #aaa;
-      font-style: italic;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      padding-top: 6px;
-    }
-
-    /* Social Action Buttons */
     .social-links {
       display: flex;
       justify-content: center;
@@ -199,113 +162,88 @@
       justify-content: center;
       align-items: center;
       color: #fff;
-      font-size: 20px;
       text-decoration: none;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: 0.3s;
     }
 
     .social-btn:hover {
       background: #6c5ce7;
-      color: #fff;
       transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
     }
   </style>
 </head>
 <body>
 
-  <!-- Video Background (thay link video tùy thích) -->
-  <video class="bg-video" autoplay loop muted playsinline>
+  <!-- MÀN HÌNH CHÀO MỪNG -->
+  <div id="welcome-screen">
+    <h1>[ CLICK TO ENTER ]</h1>
+    <p>Nhấp vào bất kỳ đâu để tiếp tục</p>
+  </div>
+
+  <!-- BG VIDEO -->
+  <video id="my-video" class="bg-video" loop muted playsinline>
     <source src="https://assets.mixkit.co/videos/preview/mixkit-stars-in-the-night-sky-1610-large.mp4" type="video/mp4">
   </video>
-
-  <!-- Lớp mờ đen phủ trên video -->
   <div class="overlay"></div>
 
-  <!-- Profile Card Container -->
+  <!-- PROFILE CARD -->
   <div class="profile-card">
-    
-    <!-- Avatar -->
     <div class="avatar-wrapper">
-      <img src="https://via.placeholder.com/150" alt="Profile Picture" id="avatar">
+      <img src="https://via.placeholder.com/150" alt="Avatar">
     </div>
 
-    <!-- Title / Auto Typing Name -->
     <div class="title">
       <span class="typewriter" id="typewriter-text"></span>
     </div>
 
-    <!-- Badges (Icon huy hiệu) -->
     <div class="badges">
-      <i class="fa-solid fa-code" style="color: #00cec9;" title="Developer"></i>
-      <i class="fa-solid fa-heart" style="color: #ff7675;" title="Love"></i>
-      <i class="fa-solid fa-music" style="color: #a29bfe;" title="Music"></i>
-      <i class="fa-solid fa-circle-check" style="color: #74b9ff;" title="Verified"></i>
+      <i class="fa-solid fa-code" style="color: #00cec9;"></i>
+      <i class="fa-solid fa-heart" style="color: #ff7675;"></i>
+      <i class="fa-solid fa-music" style="color: #a29bfe;"></i>
+      <i class="fa-solid fa-circle-check" style="color: #74b9ff;"></i>
     </div>
 
-    <!-- Tech Stack Logos -->
     <div class="tech-stack">
-      <i class="fa-brands fa-python" style="color: #ffeaa7;" title="Python"></i>
-      <i class="fa-brands fa-html5" style="color: #e17055;" title="HTML5"></i>
-      <i class="fa-brands fa-css3-alt" style="color: #0984e3;" title="CSS3"></i>
-      <i class="fa-brands fa-js" style="color: #fdcb6e;" title="JavaScript"></i>
-      <i class="fa-solid fa-database" style="color: #00b894;" title="MySQL"></i>
+      <i class="fa-brands fa-python" style="color: #ffeaa7;"></i>
+      <i class="fa-brands fa-html5" style="color: #e17055;"></i>
+      <i class="fa-brands fa-css3-alt" style="color: #0984e3;"></i>
+      <i class="fa-brands fa-js" style="color: #fdcb6e;"></i>
     </div>
 
-    <!-- Bio Description -->
     <div class="bio">
-      Le Thinh Media - Support Dv Mxh<br>
-      Dev / Tricker Facebook TikTok
+      Le Thinh Media - Support Dv Mxh<br>Dev / Tricker Facebook TikTok
     </div>
 
-    <!-- Discord Widget Box -->
-    <div class="discord-card">
-      <div class="discord-header">
-        <img class="discord-avatar" src="https://via.placeholder.com/100" alt="Discord Avatar">
-        <div class="discord-info">
-          <b>Le Van Thinh</b>
-          <span style="color: #2ecc71; font-size: 11px;"><i class="fa-solid fa-circle"></i> Online</span>
-        </div>
-      </div>
-      <div class="discord-quote">
-        Discord: minq_hoagzzz<br>
-        <i>"Not important enough How can it get priority!"</i>
-      </div>
-    </div>
-
-    <!-- Social Buttons -->
     <div class="social-links">
-      <a href="https://zalo.me/0968840911" target="_blank" class="social-btn" title="Zalo">
-        <i class="fa-solid fa-comment"></i>
-      </a>
-      <a href="https://www.tiktok.com" target="_blank" class="social-btn" title="TikTok">
-        <i class="fa-brands fa-tiktok"></i>
-      </a>
-      <a href="https://www.facebook.com" target="_blank" class="social-btn" title="Facebook">
-        <i class="fa-brands fa-facebook-f"></i>
-      </a>
+      <a href="#" class="social-btn"><i class="fa-solid fa-comment"></i></a>
+      <a href="#" class="social-btn"><i class="fa-brands fa-tiktok"></i></a>
+      <a href="#" class="social-btn"><i class="fa-brands fa-facebook-f"></i></a>
     </div>
-
   </div>
 
-  <!-- JavaScript Cho Hiệu Ứng Gõ Chữ -->
   <script>
+    // Xử lý sự kiện click Welcome
+    const welcomeScreen = document.getElementById('welcome-screen');
+    const bgVideo = document.getElementById('my-video');
+
+    welcomeScreen.addEventListener('click', () => {
+      welcomeScreen.classList.add('fade-out');
+      bgVideo.play(); // Bật video/âm thanh ngay khi người dùng tương tác
+      setTimeout(type, 800); // Chờ ẩn màn chào mừng mới chạy gõ chữ
+    });
+
+    // Code gõ chữ Typewriter
     const textArray = ["Le Thinh Media", "Support Dv Mxh", "Developer"];
-    let index = 0;
-    let charIndex = 0;
-    const speed = 100;
-    const eraseSpeed = 50;
-    const delay = 1500;
+    let index = 0, charIndex = 0;
     const typewriterElement = document.getElementById("typewriter-text");
 
     function type() {
       if (charIndex < textArray[index].length) {
         typewriterElement.textContent += textArray[index].charAt(charIndex);
         charIndex++;
-        setTimeout(type, speed);
+        setTimeout(type, 100);
       } else {
-        setTimeout(erase, delay);
+        setTimeout(erase, 1500);
       }
     }
 
@@ -313,16 +251,12 @@
       if (charIndex > 0) {
         typewriterElement.textContent = textArray[index].substring(0, charIndex - 1);
         charIndex--;
-        setTimeout(erase, eraseSpeed);
+        setTimeout(erase, 50);
       } else {
         index = (index + 1) % textArray.length;
-        setTimeout(type, speed);
+        setTimeout(type, 100);
       }
     }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      setTimeout(type, delay);
-    });
   </script>
 </body>
 </html>
