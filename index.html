@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile Card</title>
+  <title>Profile Terminal</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
     * {
@@ -16,7 +16,7 @@
     }
 
     body {
-      background-color: #0d0f12;
+      background-color: #000;
       color: #fff;
       display: flex;
       justify-content: center;
@@ -25,15 +25,14 @@
       overflow: hidden;
     }
 
-    /* POPUP TERMINAL WELCOME OVERLAY */
+    /* MÀN HÌNH TERMINAL OVERLAY */
     #welcome-screen {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(10px);
+      background: rgba(0, 0, 0, 0.9);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -42,67 +41,51 @@
       transition: opacity 0.8s ease, visibility 0.8s ease;
     }
 
-    /* Cửa sổ phong cách macOS Window */
     .terminal-window {
       width: 90%;
-      max-width: 380px;
-      background: #1e1e1e;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      max-width: 360px;
+      background: #181818;
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 12px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
       overflow: hidden;
     }
 
     .terminal-header {
-      background: #2d2d2d;
-      padding: 10px 15px;
+      background: #252525;
+      padding: 10px 14px;
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
     .red { background: #ff5f56; }
     .yellow { background: #ffbd2e; }
     .green { background: #27c93f; }
 
     .terminal-body {
-      padding: 20px;
-      font-family: 'Fira Code', monospace;
+      padding: 20px 15px;
+      font-family: 'Courier New', Courier, monospace;
       font-size: 11px;
-      line-height: 1.2;
+      line-height: 1.15;
       color: #e0e0e0;
       text-align: center;
-      white-space: pre;
     }
 
-    .ascii-art {
+    .braille-art {
+      white-space: pre;
       display: inline-block;
       text-align: left;
-      color: #fff;
       font-weight: bold;
+      letter-spacing: 1px;
     }
 
-    .terminal-info {
+    .terminal-text {
       margin-top: 15px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .press-continue {
-      margin-top: 10px;
       font-size: 12px;
-      color: #aaa;
-      animation: blink 1.2s infinite;
-    }
-
-    @keyframes blink {
-      50% { opacity: 0.3; }
+      line-height: 1.6;
+      min-height: 120px;
     }
 
     .fade-out {
@@ -110,7 +93,7 @@
       visibility: hidden !important;
     }
 
-    /* Video Nền */
+    /* BACKGROUND VIDEO & MAIN CARD */
     .bg-video {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -123,12 +106,11 @@
       background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); z-index: -1;
     }
 
-    /* Profile Card Main */
     .profile-card {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 20px; padding: 30px 25px;
-      width: 90%; max-width: 420px; text-align: center;
+      width: 90%; max-width: 400px; text-align: center;
       backdrop-filter: blur(15px);
     }
   </style>
@@ -143,15 +125,9 @@
         <div class="dot green"></div>
       </div>
       <div class="terminal-body">
-        <div class="ascii-art" id="ascii-container"></div>
+        <div class="braille-art" id="braille-container"></div>
         
-        <div class="terminal-info" id="info-container" style="display: none;">
-          <div>Mở trên web <i>để tránh bị lỗi!</i></div>
-          <div style="margin-top: 5px;">IP: <span id="ip-address">Đang tải...</span></div>
-          <div>System: <span id="user-system">Loading...</span></div>
-          <div>Bio Loaded</div>
-          <div class="press-continue">Press Enter/Click To Continue</div>
-        </div>
+        <div class="terminal-text" id="text-container"></div>
       </div>
     </div>
   </div>
@@ -162,61 +138,78 @@
   <div class="overlay"></div>
 
   <div class="profile-card">
-    <h2>Le Thinh Media</h2>
-    <p>Support Dv Mxh</p>
+    <h2>Anime & Coding</h2>
+    <p>Le Thinh Media - Support Dv Mxh</p>
   </div>
 
   <script>
-    // Mã ASCII vẽ con mèo 
-    const asciiCat = [
-      "┌─┐┌─┐┬  ┬┬─┐┌─┐┬─┐┬─┐┬─┐",
-      "│  ├─┤│  │├┬┘├─┤├┬┘├┬┘├┬┘",
-      "└─┘┴ ┴┴─┘┴┴└─┴ ┴┴└─┴└─┴└─",
-      "   /\\_/\\  ",
-      "  ( o.o ) ",
-      "   > ^ <  ",
-      " ฅ^•ﻌ•^ฅ "
+    // Bức ảnh Braille chuẩn theo video
+    const brailleLines = [
+      "⡏⠉⠉⠉⠉⢹⢏⠉⠉⠉⠉⢹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+      "⡇⠄⠂⠁⡏⢠⣤⣄⠄⢹⣿⣿⣿⣿⠿⠿⠉⠉⠉⢹",
+      "⣿⣦⡀⠌⣴⣿⣿⣿⡏⢄⣀⣀⣀⣤⣴⣿⣿⣿⡇",
+      "⣿⣿⡿⢠⣿⣿⣿⡿⠁⢾⣿⡏⢠⣾⣿⣿⣿⣿⣿⡇⠄",
+      "⡿⡿⢠⡿⠿⠿⠿⣿⣷⣌⣹⣿⣶⣾⣿⣿⣿⣿⣿⠁⠹",
+      "⡇⢿⣿⠁⠄⠙⣿⡿⠿⠿⣿⣏⠿⠿⠿⠿⢿⣿⣿⠄⣿",
+      "⠈⣾⣿⣄⣴⣾⣿⣷⣶⣶⣴⣷⠄⠤⠤⢿⣿⣿⣷⠄⠁",
+      "⠄⡿⠁⠄⠄⠄⠙⠿⠉⠄⠄⢴⣷⣶⣾⣿⣿⣿⣷⠄",
+      "⣸⠄⢠⣀⠄⠄⠄⠄⠄⠄⣀⣀⣈⡉⠿⣿⣿⣿⣶⠉⣄",
+      "⡏⣿⣿⣿⠄⢠⠄⠄⠄⠄⣿⣿⣿⣿⣶⣌⡹⢏⠹⠁⢹",
+      "⢸⢸⣿⣿⠁⠄⠄⠄⡀⠄⠹⠿⢿⣿⣿⣿⣿⣷⣄⢴⣿",
+      "⣷⢠⠻⠿⠁⠄⠄⠄⠄⠄⠄⠈⠙⠿⣿⣿⣿⣿⣿⣷⠙"
     ];
 
-    const asciiContainer = document.getElementById("ascii-container");
-    const infoContainer = document.getElementById("info-container");
-    let lineIndex = 0;
+    const brailleContainer = document.getElementById("braille-container");
+    const textContainer = document.getElementById("text-container");
 
-    // Chạy render từng dòng ASCII con mèo
-    function printAscii() {
-      if (lineIndex < asciiCat.length) {
-        asciiContainer.innerHTML += asciiCat[lineIndex] + "\n";
-        lineIndex++;
-        setTimeout(printAscii, 120); // Tốc độ xuất hiện từng dòng
+    let lineIdx = 0;
+
+    // 1. Chạy xuất hiện từng dòng ảnh Braille
+    function renderBraille() {
+      if (lineIdx < brailleLines.length) {
+        brailleContainer.innerHTML += brailleLines[lineIdx] + "\n";
+        lineIdx++;
+        setTimeout(renderBraille, 80); // Tốc độ rơi từng dòng ảnh
       } else {
-        // Render xong con mèo thì hiện thông tin bên dưới
-        infoContainer.style.display = "block";
+        // Sau khi vẽ xong ảnh thì chuyển sang gõ chữ thông tin
+        setTimeout(typeTextInfo, 300);
       }
     }
 
-    // Tự động nhận diện thiết bị & Lấy địa chỉ IP thật
-    function getSystemInfo() {
-      // Nhận diện OS
-      const userAgent = navigator.userAgent;
-      let os = "Unknown OS";
-      if (userAgent.indexOf("iPhone") !== -1 || userAgent.indexOf("iPad") !== -1) os = "iOS";
-      else if (userAgent.indexOf("Android") !== -1) os = "Android";
-      else if (userAgent.indexOf("Windows") !== -1) os = "Windows PC";
-      else if (userAgent.indexOf("Mac") !== -1) os = "macOS";
-      document.getElementById("user-system").textContent = os;
+    // 2. Nội dung các dòng chữ bên dưới
+    const textLines = [
+      "Mở trên web để tránh bị lỗi!",
+      "IP: 27.79.120.174",
+      "System: iOS 18.6",
+      "Bio Loaded",
+      "Press Enter/Click To Continue"
+    ];
 
-      // Lấy IP từ API
-      fetch('https://api.ipify.org?format=json')
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById("ip-address").textContent = data.ip;
-        })
-        .catch(() => {
-          document.getElementById("ip-address").textContent = "127.0.0.1";
-        });
+    let currentLine = 0;
+    let currentChar = 0;
+
+    // Chạy hiệu ứng gõ từng ký tự từng dòng
+    function typeTextInfo() {
+      if (currentLine < textLines.length) {
+        if (currentChar === 0) {
+          textContainer.innerHTML += "<div id='line-" + currentLine + "'></div>";
+        }
+        
+        let lineElement = document.getElementById('line-' + currentLine);
+        lineElement.textContent += textLines[currentLine].charAt(currentChar);
+        currentChar++;
+
+        if (currentChar < textLines[currentLine].length) {
+          setTimeout(typeTextInfo, 40); // Tốc độ gõ ký tự
+        } else {
+          currentLine++;
+          currentChar = 0;
+          setTimeout(typeTextInfo, 150); // Khoảng nghỉ giữa các dòng
+        }
+      }
     }
 
-    // Xử lý sự kiện Click để vào web
+    // Sự kiện Click vào Terminal để chuyển sang Web
     const welcomeScreen = document.getElementById('welcome-screen');
     const bgVideo = document.getElementById('my-video');
 
@@ -225,11 +218,8 @@
       bgVideo.play();
     });
 
-    // Chạy script khi tải trang
-    document.addEventListener("DOMContentLoaded", () => {
-      printAscii();
-      getSystemInfo();
-    });
+    // Chạy hiệu ứng khi tải trang
+    document.addEventListener("DOMContentLoaded", renderBraille);
   </script>
 </body>
 </html>
