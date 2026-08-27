@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile Terminal</title>
+  <title>Le Thinh Media - Profile</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     * {
@@ -16,23 +16,23 @@
     }
 
     body {
-      background-color: #000;
+      background-color: #050505;
       color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      overflow: hidden;
+      overflow-x: hidden;
     }
 
-    /* MÀN HÌNH TERMINAL OVERLAY */
+    /* ================= TERMINAL WELCOME OVERLAY ================= */
     #welcome-screen {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.9);
+      background: rgba(0, 0, 0, 0.92);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -41,19 +41,20 @@
       transition: opacity 0.8s ease, visibility 0.8s ease;
     }
 
+    /* Tăng kích thước cửa sổ macOS */
     .terminal-window {
-      width: 90%;
-      max-width: 360px;
+      width: 92%;
+      max-width: 440px;
       background: #181818;
       border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+      border-radius: 14px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95);
       overflow: hidden;
     }
 
     .terminal-header {
       background: #252525;
-      padding: 10px 14px;
+      padding: 12px 16px;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -65,27 +66,31 @@
     .green { background: #27c93f; }
 
     .terminal-body {
-      padding: 20px 15px;
+      padding: 25px 20px;
       font-family: 'Courier New', Courier, monospace;
-      font-size: 11px;
-      line-height: 1.15;
-      color: #e0e0e0;
       text-align: center;
     }
 
+    /* CON MÈO TO HƠN */
     .braille-art {
       white-space: pre;
       display: inline-block;
       text-align: left;
+      font-size: 14px; /* Tăng cỡ chữ để hình to ra */
+      line-height: 1.2;
       font-weight: bold;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
+      color: #ffffff;
+      text-shadow: 0 0 5px rgba(255,255,255,0.3);
     }
 
     .terminal-text {
-      margin-top: 15px;
-      font-size: 12px;
-      line-height: 1.6;
-      min-height: 120px;
+      margin-top: 20px;
+      font-size: 13px;
+      line-height: 1.7;
+      min-height: 130px;
+      color: #e0e0e0;
+      font-family: 'Poppins', sans-serif;
     }
 
     .fade-out {
@@ -93,25 +98,183 @@
       visibility: hidden !important;
     }
 
-    /* BACKGROUND VIDEO & MAIN CARD */
+    /* ================= GIAO DIỆN PROFILE CHÍNH ================= */
     .bg-video {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      object-fit: cover; z-index: -2; filter: brightness(0.5);
+      object-fit: cover; z-index: -2; filter: brightness(0.45);
     }
 
     .overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); z-index: -1;
+      background: radial-gradient(circle, rgba(120, 40, 200, 0.25) 0%, rgba(0, 0, 0, 0.75) 100%);
+      backdrop-filter: blur(10px);
+      z-index: -1;
     }
 
+    /* Profile Container */
     .profile-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 24px;
+      padding: 30px 22px;
+      width: 90%;
+      max-width: 410px;
+      text-align: center;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(255, 255, 255, 0.05);
+      margin: 20px 0;
+    }
+
+    /* Avatar với Khung Viền Phát Sáng */
+    .avatar-container {
+      position: relative;
+      width: 105px;
+      height: 105px;
+      margin: 0 auto 15px auto;
+    }
+
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 20px rgba(162, 155, 254, 0.6);
+    }
+
+    /* Tiêu đề & Chữ gõ tự động */
+    .profile-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .typewriter-text {
+      color: #e0e0e0;
+      border-right: 2px solid #a29bfe;
+      white-space: nowrap;
+      animation: blinkCursor 0.8s infinite;
+    }
+
+    @keyframes blinkCursor {
+      50% { border-color: transparent; }
+    }
+
+    /* Icon Huy Hiệu (Badges) */
+    .badge-icons {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 15px;
+      font-size: 13px;
+      color: #aaa;
+    }
+
+    /* Card Discord Style */
+    .discord-widget {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 12px 15px;
+      text-align: left;
+      margin: 15px 0;
+    }
+
+    .discord-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .discord-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .discord-name {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .discord-quote {
+      font-size: 11px;
+      color: #999;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      font-style: italic;
+    }
+
+    /* Nút Bio chính dạng Capsule */
+    .bio-capsule {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      padding: 12px 20px;
+      font-size: 13px;
+      color: #eee;
+      line-height: 1.5;
+      margin: 18px 0;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    /* Tech Stack Logos */
+    .tech-logos {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin: 18px 0;
+      flex-wrap: wrap;
+    }
+
+    .tech-logos i, .tech-logos img {
+      font-size: 20px;
+      width: 22px;
+      height: 22px;
+      transition: transform 0.2s ease;
+    }
+
+    .tech-logos i:hover, .tech-logos img:hover {
+      transform: scale(1.25);
+    }
+
+    /* Social Action Buttons */
+    .social-actions {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .social-icon-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 20px; padding: 30px 25px;
-      width: 90%; max-width: 400px; text-align: center;
-      backdrop-filter: blur(15px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-size: 18px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .social-icon-btn:hover {
+      background: #70a1ff;
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(112, 161, 255, 0.4);
     }
   </style>
 </head>
@@ -138,12 +301,59 @@
   <div class="overlay"></div>
 
   <div class="profile-card">
-    <h2>Anime & Coding</h2>
-    <p>Le Thinh Media - Support Dv Mxh</p>
+    
+    <div class="avatar-container">
+      <img src="https://via.placeholder.com/150" alt="Profile Avatar" class="avatar-img">
+    </div>
+
+    <div class="profile-title">
+      <span class="typewriter-text" id="typewriter"></span>
+    </div>
+
+    <div class="badge-icons">
+      <i class="fa-solid fa-cube" title="Cube"></i>
+      <i class="fa-solid fa-heart" style="color: #ff7675;" title="Heart"></i>
+      <i class="fa-solid fa-music" style="color: #a29bfe;" title="Music"></i>
+      <i class="fa-solid fa-shield-halved" style="color: #74b9ff;" title="Verified"></i>
+    </div>
+
+    <div class="discord-widget">
+      <div class="discord-user">
+        <img class="discord-avatar" src="https://via.placeholder.com/100" alt="Discord Pfp">
+        <div>
+          <div class="discord-name">Le Van Thinh</div>
+        </div>
+      </div>
+      <div class="discord-quote">
+        Discord: minq_hoagzzz<br>
+        Not important enough How can it get priority!
+      </div>
+    </div>
+
+    <div class="bio-capsule">
+      <b>Le Thinh Media - Support Dv Mxh</b><br>
+      Dev Tricker Facebook Tik Tok
+    </div>
+
+    <div class="tech-logos">
+      <i class="fa-solid fa-database" style="color: #00b894;" title="MySQL"></i>
+      <i class="fa-brands fa-c" style="color: #0984e3;" title="C++"></i>
+      <i class="fa-brands fa-python" style="color: #ffeaa7;" title="Python"></i>
+      <i class="fa-brands fa-html5" style="color: #e17055;" title="HTML5"></i>
+      <i class="fa-brands fa-css3-alt" style="color: #74b9ff;" title="CSS3"></i>
+      <i class="fa-solid fa-code" style="color: #a29bfe;" title="VS Code"></i>
+    </div>
+
+    <div class="social-actions">
+      <a href="https://zalo.me/0968840911" target="_blank" class="social-icon-btn" title="Zalo"><i class="fa-solid fa-comment-dots"></i></a>
+      <a href="https://www.tiktok.com" target="_blank" class="social-icon-btn" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+      <a href="https://www.facebook.com" target="_blank" class="social-icon-btn" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+    </div>
+
   </div>
 
   <script>
-    // Bức ảnh Braille chuẩn theo video
+    /* 1. MÃ BRAILLE CON MÈO */
     const brailleLines = [
       "⡏⠉⠉⠉⠉⢹⢏⠉⠉⠉⠉⢹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
       "⡇⠄⠂⠁⡏⢠⣤⣄⠄⢹⣿⣿⣿⣿⠿⠿⠉⠉⠉⢹",
@@ -161,22 +371,20 @@
 
     const brailleContainer = document.getElementById("braille-container");
     const textContainer = document.getElementById("text-container");
-
     let lineIdx = 0;
 
-    // 1. Chạy xuất hiện từng dòng ảnh Braille
+    // Xuất hiện từng dòng con mèo (Tốc độ giảm xuống 160ms - chậm gấp đôi)
     function renderBraille() {
       if (lineIdx < brailleLines.length) {
         brailleContainer.innerHTML += brailleLines[lineIdx] + "\n";
         lineIdx++;
-        setTimeout(renderBraille, 80); // Tốc độ rơi từng dòng ảnh
+        setTimeout(renderBraille, 160);
       } else {
-        // Sau khi vẽ xong ảnh thì chuyển sang gõ chữ thông tin
-        setTimeout(typeTextInfo, 300);
+        setTimeout(typeTextInfo, 400);
       }
     }
 
-    // 2. Nội dung các dòng chữ bên dưới
+    /* 2. CHỮ THÔNG TIN TERMINAL (Gõ chậm hơn) */
     const textLines = [
       "Mở trên web để tránh bị lỗi!",
       "IP: 27.79.120.174",
@@ -188,7 +396,6 @@
     let currentLine = 0;
     let currentChar = 0;
 
-    // Chạy hiệu ứng gõ từng ký tự từng dòng
     function typeTextInfo() {
       if (currentLine < textLines.length) {
         if (currentChar === 0) {
@@ -200,25 +407,57 @@
         currentChar++;
 
         if (currentChar < textLines[currentLine].length) {
-          setTimeout(typeTextInfo, 40); // Tốc độ gõ ký tự
+          setTimeout(typeTextInfo, 70); // Tốc độ gõ ký tự chậm hơn (70ms)
         } else {
           currentLine++;
           currentChar = 0;
-          setTimeout(typeTextInfo, 150); // Khoảng nghỉ giữa các dòng
+          setTimeout(typeTextInfo, 250); // Nghỉ giữa các dòng (250ms)
         }
       }
     }
 
-    // Sự kiện Click vào Terminal để chuyển sang Web
+    /* 3. TƯƠNG TÁC SỰ KIỆN ENTER / CLICK */
     const welcomeScreen = document.getElementById('welcome-screen');
     const bgVideo = document.getElementById('my-video');
 
-    welcomeScreen.addEventListener('click', () => {
+    function closeWelcome() {
       welcomeScreen.classList.add('fade-out');
       bgVideo.play();
+      setTimeout(startProfileTypewriter, 800);
+    }
+
+    welcomeScreen.addEventListener('click', closeWelcome);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') closeWelcome();
     });
 
-    // Chạy hiệu ứng khi tải trang
+    /* 4. TYPEWRITER CHO PROFILE CHÍNH */
+    const profileTexts = ["Anime & Coding", "Le Thinh Media", "Dev / Tricker"];
+    let pIdx = 0, pCharIdx = 0;
+    const typewriterEl = document.getElementById("typewriter");
+
+    function startProfileTypewriter() {
+      if (pCharIdx < profileTexts[pIdx].length) {
+        typewriterEl.textContent += profileTexts[pIdx].charAt(pCharIdx);
+        pCharIdx++;
+        setTimeout(startProfileTypewriter, 120);
+      } else {
+        setTimeout(eraseProfileText, 2000);
+      }
+    }
+
+    function eraseProfileText() {
+      if (pCharIdx > 0) {
+        typewriterEl.textContent = profileTexts[pIdx].substring(0, pCharIdx - 1);
+        pCharIdx--;
+        setTimeout(eraseProfileText, 60);
+      } else {
+        pIdx = (pIdx + 1) % profileTexts.length;
+        setTimeout(startProfileTypewriter, 200);
+      }
+    }
+
+    // Chạy script khi tải trang
     document.addEventListener("DOMContentLoaded", renderBraille);
   </script>
 </body>
